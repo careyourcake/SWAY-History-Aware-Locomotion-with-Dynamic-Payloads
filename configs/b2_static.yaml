@@ -1,0 +1,13 @@
+experiment_name: b2_static
+seed: 0
+require_gpu: true
+policy: {type: mlp, history_length: 1, history_stride: 1, actor_hidden_layers: [128, 64]}
+environment:
+  episode_length: 1000
+  command_resample_steps: 250
+  command: {forward: [-0.2, 1.2], lateral: [-0.2, 0.2], yaw: [-0.4, 0.4], standing_probability: 0.02}
+  payload: {mass: [1.0, 5.0], x: [-0.2, 0.2], y: [-0.12, 0.12], z: [0.08, 0.25]}
+  dynamic_payload: {enabled: false, mass: [1.0, 5.0], length: [0.2, 0.2], linear_stiffness: 15.0, cubic_stiffness: 25.0, damping: 2.5, angle_limit_deg: 20.0, initial_angle_deg: [0.0, 0.0], initial_velocity: [0.0, 0.0]}
+  randomization: {friction: [0.8, 1.1], motor_strength: [0.98, 1.02], kp_scale: [0.98, 1.02], kd_scale: [0.98, 1.02], observation_noise: 0.005, action_delay_probability: 0.02, push_probability: 0.002, push_velocity: 0.4}
+  reward: {tracking_linear: 4.0, tracking_yaw: 1.0, vertical_velocity: -1.0, roll_pitch_rate: -0.05, upright: 0.5, height: 0.3, torque: -0.000002, power: -0.0000002, action_rate: -0.002, foot_slip: -0.05, collision: -1.0, alive: 0.0, stand: 0.2}
+training: {num_timesteps: 100000000, num_envs: 4096, episode_length: 1000, action_repeat: 1, num_evals: 10, num_eval_envs: 128, learning_rate: 0.0003, entropy_cost: 0.01, discounting: 0.99, unroll_length: 20, batch_size: 1024, num_minibatches: 32, num_updates_per_batch: 4, normalize_observations: true, reward_scaling: 1.0, clipping_epsilon: 0.2, gae_lambda: 0.95, network_hidden_layers: [256, 256, 128]}

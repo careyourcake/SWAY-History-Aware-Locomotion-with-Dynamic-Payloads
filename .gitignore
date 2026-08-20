@@ -1,0 +1,18 @@
+# Training outputs and generated artifacts
+runs/
+**/checkpoints/
+**/evaluation/
+**/videos/
+*.mp4
+*.gif
+*.pyc
+__pycache__/
+.pytest_cache/
+.DS_Store
+
+# Local environments and editor files
+.venv/
+venv/
+.env
+.idea/
+.vscode/

@@ -1,0 +1,67 @@
+experiment_name: gru_dynamic_smoke
+seed: 0
+require_gpu: false
+policy:
+  type: gru
+  history_length: 8
+  history_stride: 2
+  gru_hidden_size: 16
+  actor_hidden_layers: [32, 16]
+environment:
+  episode_length: 16
+  command_resample_steps: 16
+  command: {forward: [0.0, 0.5], lateral: [0.0, 0.0], yaw: [0.0, 0.0], standing_probability: 0.1}
+  payload: {mass: [0.0, 3.0], x: [-0.03, 0.03], y: [-0.02, 0.02], z: [0.20, 0.30]}
+  dynamic_payload:
+    enabled: true
+    mass: [1.0, 2.0]
+    length: [0.2, 0.2]
+    linear_stiffness: 15.0
+    cubic_stiffness: 25.0
+    damping: 2.5
+    angle_limit_deg: 20.0
+    initial_angle_deg: [-3.0, 3.0]
+    initial_velocity: [-0.1, 0.1]
+  randomization:
+    friction: [0.8, 1.0]
+    motor_strength: [0.98, 1.02]
+    kp_scale: [0.98, 1.02]
+    kd_scale: [0.98, 1.02]
+    observation_noise: 0.0
+    action_delay_probability: 0.0
+    push_probability: 0.0
+    push_velocity: 0.0
+  reward:
+    tracking_linear: 4.0
+    tracking_yaw: 1.0
+    vertical_velocity: -1.0
+    roll_pitch_rate: -0.05
+    upright: 0.5
+    height: 0.3
+    torque: -0.000002
+    power: -0.0000002
+    action_rate: -0.002
+    foot_slip: -0.05
+    collision: -1.0
+    alive: 0.0
+    stand: 0.2
+training:
+  num_timesteps: 16
+  num_envs: 2
+  episode_length: 16
+  action_repeat: 1
+  num_evals: 0
+  num_eval_envs: 2
+  run_evals: false
+  learning_rate: 0.0003
+  entropy_cost: 0.01
+  discounting: 0.99
+  unroll_length: 2
+  batch_size: 2
+  num_minibatches: 1
+  num_updates_per_batch: 1
+  normalize_observations: true
+  reward_scaling: 1.0
+  clipping_epsilon: 0.2
+  gae_lambda: 0.95
+  network_hidden_layers: [32, 16]
