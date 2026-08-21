@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "b2-mjx"
-version = "0.1.0"
+version = "0.2.0"
 description = "Payload-randomized Unitree B2 locomotion environment for MuJoCo MJX."
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
