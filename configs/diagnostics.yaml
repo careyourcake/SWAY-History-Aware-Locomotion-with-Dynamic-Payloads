@@ -1,0 +1,15 @@
+# These configurations validate the custom MJX environment and reward scale.
+# They are not literature baselines and must not appear as SOTA comparisons.
+diagnostics:
+  - name: b0_sanity
+    config: configs/b0_sanity.yaml
+    purpose: "fixed-command locomotion feasibility check"
+  - name: b1_no_load_reference
+    config: configs/b1_locomotion.yaml
+    purpose: "internal no-load PPO reference"
+  - name: b2_static_load_reference
+    config: configs/b2_static.yaml
+    purpose: "internal static-load PPO reference"
+  - name: b3_dynamic_load_reference
+    config: configs/b3_dynamic_mlp.yaml
+    purpose: "internal dynamic-load PPO reference"

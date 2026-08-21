@@ -2,7 +2,7 @@
 set -euo pipefail
 
 seed="${1:-0}"
-output_root="${2:-runs/ablation}"
+output_root="${2:-runs/internal_ablation}"
 config=configs/ppo_b2_payload.yaml
 
 for method in mlp_dynamic stack5_dynamic gru_dynamic; do

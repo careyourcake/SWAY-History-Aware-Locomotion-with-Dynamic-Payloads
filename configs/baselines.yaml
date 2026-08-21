@@ -1,0 +1,45 @@
+# Literature-grounded baseline registry.
+# A registry entry is not a claim of reproduction until its implementation,
+# observation mask, training budget, and evaluation report are recorded.
+baselines:
+  privileged_ppo:
+    status: required_internal_control
+    source: "Brax PPO / privileged critic control; no external performance claim"
+    implementation: current_ppo_with_privileged_actor
+    observation: "actor receives payload state; upper-bound control reference"
+    claim: "upper bound only, not a SOTA comparison"
+  recurrent_ppo:
+    status: required_internal_control
+    source: "Memory-based locomotion precedent: Learning Memory-Based Control for Human-Scale Bipedal Locomotion, RSS 2020"
+    citation: "https://doi.org/10.15607/rss.2020.xvi.031"
+    implementation: current_gru_actor
+    observation: "proprioceptive history only"
+    claim: "controlled temporal-policy reference"
+  online_dynamics_adaptation:
+    status: reproduce_before_claim
+    source: "Online Learning of Unknown Dynamics for Model-Based Controllers in Legged Locomotion, RA-L 2021"
+    citation: "https://doi.org/10.1109/lra.2021.3108510"
+    implementation: not_implemented
+    observation: "proprioception plus online local residual dynamics model"
+    claim: "must not be reported until reproduced or explicitly marked unavailable"
+  unknown_payload_adaptive_control:
+    status: reproduce_before_claim
+    source: "Unknown Payload Adaptive Control for Quadruped Locomotion With Proprioceptive Linear Legs, T-Mech 2022"
+    citation: "https://doi.org/10.1109/tmech.2022.3170548"
+    implementation: not_implemented
+    observation: "proprioception with online payload identification"
+    claim: "must not be reported until reproduced or explicitly marked unavailable"
+  mule:
+    status: reproduce_before_claim
+    source: "MULE: Multi-Terrain and Unknown Load Adaptation for Effective Quadrupedal Locomotion, RA-L 2025"
+    citation: "https://doi.org/10.1109/lra.2025.3632081"
+    implementation: not_implemented
+    observation: "adaptive corrective policy under unknown load and terrain"
+    claim: "closest recent adaptive-load reference; no equivalence claim"
+  adaptive_mpc:
+    status: reproduce_before_claim
+    source: "Predictive Control With Indirect Adaptive Laws for Payload Transportation by Quadrupedal Robots, RA-L 2024"
+    citation: "https://doi.org/10.1109/lra.2024.3474550"
+    implementation: not_implemented
+    observation: "online payload parameter adaptation plus MPC/WBC"
+    claim: "model-based hardware reference when implemented"
