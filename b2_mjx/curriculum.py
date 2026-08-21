@@ -12,7 +12,7 @@ import yaml
 from b2_mjx.config import load_config, validate_config, without_internal_keys
 
 
-METHOD_POLICY = {"mlp_dynamic": "mlp", "stack5_dynamic": "frame_stack", "gru_dynamic": "gru"}
+METHOD_POLICY = {"mlp_dynamic": "mlp", "stack5_dynamic": "frame_stack", "gru_dynamic": "gru", "pdb_prc": "pdb_prc"}
 
 
 def deep_update(target: dict[str, Any], patch: Mapping[str, Any]) -> dict[str, Any]:

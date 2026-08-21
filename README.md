@@ -51,6 +51,14 @@ bash scripts/run_curriculum.sh gru_dynamic 0 runs/curriculum
 
 无课程对照继续使用 `scripts/run_ablation.sh`。正式比较包括 B1/B2/B3、MLP/stack5/GRU 有课程、MLP/GRU 无课程；奖励修复和终止条件仅作为实现细节，不作为论文贡献。
 
+## PDB-PRC prototype
+
+The `pdb_prc` policy is an experimental phase/disturbance-belief gated residual actor. A GRU history encoder produces a latent belief and uncertainty scalar; nominal and residual action heads are combined with reduced residual authority under high uncertainty. The checkpoint also contains disturbance-prediction and phase heads for the next auxiliary-loss trainer. The stock Brax PPO loop currently optimizes only the action distribution, so this prototype is an interface scaffold and must not be reported as the final PDB-PRC method until the auxiliary losses are implemented and validated.
+
+```bash
+python -m b2_mjx.train --config configs/pdb_prc_smoke.yaml --run-dir runs/pdb_prc_smoke
+```
+
 - `gru_dynamic`：50 个、间隔两个策略步采样的历史观测，约覆盖 2 秒；GRU(64) 后接 MLP(128, 64)。
 - `mlp_dynamic`：相同动态环境，只使用当前帧。
 - `stack5_dynamic`：最近 5 帧直接拼接给 MLP。

@@ -40,8 +40,8 @@ def validate_config(config: Mapping[str, Any]) -> None:
         if float(reward[name]) > 0:
             raise ValueError(f"environment.reward.{name} must be non-positive")
     policy = config["policy"]
-    if policy.get("type") not in {"gru", "mlp", "frame_stack"}:
-        raise ValueError("policy.type must be gru, mlp, or frame_stack")
+    if policy.get("type") not in {"gru", "pdb_prc", "mlp", "frame_stack"}:
+        raise ValueError("policy.type must be gru, pdb_prc, mlp, or frame_stack")
     if int(policy.get("history_length", 0)) <= 0 or int(policy.get("history_stride", 0)) <= 0:
         raise ValueError("policy history_length and history_stride must be positive")
 

@@ -23,7 +23,7 @@ def parse_args():
     parser.add_argument("--config", required=True)
     parser.add_argument("--resume")
     parser.add_argument("--run-dir")
-    parser.add_argument("--method", choices=["gru_dynamic", "mlp_dynamic", "stack5_dynamic", "mlp_static"])
+    parser.add_argument("--method", choices=["gru_dynamic", "pdb_prc", "mlp_dynamic", "stack5_dynamic", "mlp_static"])
     parser.add_argument("--seed", type=int)
     return parser.parse_args()
 
@@ -35,7 +35,7 @@ def main() -> None:
         config["seed"] = args.seed
     if args.method is not None:
         method = args.method
-        config["policy"]["type"] = {"gru_dynamic": "gru", "mlp_dynamic": "mlp", "stack5_dynamic": "frame_stack", "mlp_static": "mlp"}[method]
+        config["policy"]["type"] = {"gru_dynamic": "gru", "pdb_prc": "pdb_prc", "mlp_dynamic": "mlp", "stack5_dynamic": "frame_stack", "mlp_static": "mlp"}[method]
         config["environment"]["dynamic_payload"]["enabled"] = method != "mlp_static"
         config["experiment_name"] = method
     devices = jax.devices()

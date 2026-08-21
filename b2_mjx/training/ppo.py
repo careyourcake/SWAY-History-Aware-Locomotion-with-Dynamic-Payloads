@@ -32,6 +32,32 @@ class TemporalActor(nn.Module):
         return nn.Dense(self.output_size)(x)
 
 
+class PDBPRCActor(nn.Module):
+    """Belief-gated nominal plus residual actor for periodic disturbances."""
+    output_size: int
+    hidden_size: int = 64
+    mlp_layers: tuple[int, ...] = (128, 64)
+    gate_temperature: float = 2.0
+
+    @nn.compact
+    def __call__(self, current, history):
+        sequence = nn.RNN(nn.GRUCell(features=self.hidden_size))(history)
+        latent = sequence[..., -1, :]
+        context = jnp.concatenate((current, latent), axis=-1)
+        belief = jnp.tanh(nn.Dense(self.hidden_size, name="belief_projection")(context))
+        uncertainty = nn.sigmoid(nn.Dense(1, name="uncertainty_head")(belief))
+        gate = jnp.exp(-self.gate_temperature * uncertainty)
+        x = context
+        for size in self.mlp_layers:
+            x = nn.relu(nn.Dense(size)(x))
+        nominal = nn.Dense(self.output_size, name="nominal_action")(x)
+        residual = nn.Dense(self.output_size, name="residual_action")(jnp.concatenate((x, belief), axis=-1))
+        # Auxiliary heads are checkpointed for the future supervised-loss path.
+        nn.Dense(6, name="disturbance_prediction_head")(jnp.concatenate((belief, current), axis=-1))
+        nn.Dense(2, name="phase_head")(belief)
+        return nominal + gate * residual
+
+
 def network_factory(policy_config: Mapping[str, Any], hidden_layers):
     """Creates a Brax-compatible PPO factory for GRU and baseline actors."""
     policy_cfg = dict(policy_config)
@@ -40,11 +66,13 @@ def network_factory(policy_config: Mapping[str, Any], hidden_layers):
     def make(observation_size, action_size, preprocess_observations_fn=running_statistics.normalize):
         kind = policy_cfg["type"]
         action_distribution = distribution.NormalTanhDistribution(event_size=action_size)
-        if kind == "gru":
-            module = TemporalActor(
+        if kind in {"gru", "pdb_prc"}:
+            actor_cls = PDBPRCActor if kind == "pdb_prc" else TemporalActor
+            module = actor_cls(
                 output_size=action_distribution.param_size,
                 hidden_size=int(policy_cfg.get("gru_hidden_size", 64)),
                 mlp_layers=tuple(int(x) for x in policy_cfg.get("actor_hidden_layers", [128, 64])),
+                **({"gate_temperature": float(policy_cfg.get("gate_temperature", 2.0))} if kind == "pdb_prc" else {}),
             )
             state_shape = observation_size["state"] if isinstance(observation_size["state"], tuple) else (int(observation_size["state"]),)
             dummy_current = jnp.zeros((1,) + tuple(state_shape))
